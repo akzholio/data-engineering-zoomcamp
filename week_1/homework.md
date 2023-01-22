@@ -36,6 +36,15 @@ How many python packages/modules are installed?
 ## Answer 2.
 ```
 ✅ 3
+
+docker run -it python:3.9 bas
+pip list
+
+Package    Version
+---------- -------
+pip        22.0.4
+setuptools 58.1.0
+wheel      0.38.4
 ```
 
 ## Question 3. Count records 

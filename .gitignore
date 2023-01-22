@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Postgres data
+*postgres_data/
+
+# CSV data
+*.csv

@@ -1,8 +1,4 @@
-## Week 1 Homework
-
-In this homework we'll prepare the environment 
-and practice with Docker and SQL
-
+# Week 1 Homework + Solutions
 
 ## Question 1. Knowing docker tags
 
@@ -20,7 +16,11 @@ Which tag has the following text? - *Write the image ID to the file*
 - `--idfile string`
 
 ## Answer 1.
-`✅ --iidfile string`
+```
+✅ --iidfile string
+
+docker build --help | grep "Write the image ID to the file"
+```
 
 ## Question 2. Understanding docker first run 
 
@@ -34,21 +34,9 @@ How many python packages/modules are installed?
 - 7
 
 ## Answer 2.
-`✅ 3`
-
-# Prepare Postgres
-
-Run Postgres and load data as shown in the videos
-We'll use the green taxi trips from January 2019:
-
-```wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-01.csv.gz```
-
-You will also need the dataset with zones:
-
-```wget https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv```
-
-Download this data and put it into Postgres (with jupyter notebooks or with a pipeline)
-
+```
+✅ 3
+```
 
 ## Question 3. Count records 
 
@@ -65,13 +53,12 @@ Remember that `lpep_pickup_datetime` and `lpep_dropoff_datetime` columns are in 
 
 ## Answer 3.
 ```
-select 
-    count(1) 
-from green_taxi_data 
-where date(lpep_pickup_datetime) = '2019-01-15' 
-    and date(lpep_dropoff_datetime) = '2019-01-15';
-
 ✅ 20530
+
+SELECT COUNT(1)
+FROM GREEN_TAXI_DATA
+WHERE DATE(LPEP_PICKUP_DATETIME) = '2019-01-15'
+	AND DATE(LPEP_DROPOFF_DATETIME) = '2019-01-15';
 ```
 
 ## Question 4. Largest trip for each day
@@ -87,18 +74,14 @@ Use the pick up time for your calculations.
 ## Answer 4.
 
 ```
-✅
-+------------+-------------------+
-| date       | max_trip_distance |
-|------------+-------------------|
-| 2019-01-15 | 117.99            |
+✅ 2019-01-15
 
-select 
-    date(lpep_pickup_datetime), 
-    max(trip_distance) as max_trip_distance 
-from green_taxi_data 
-group by 1 
-order by 2 desc;
+SELECT DATE(LPEP_PICKUP_DATETIME),
+	MAX(TRIP_DISTANCE) AS MAX_TRIP_DISTANCE
+FROM GREEN_TAXI_DATA
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 1;
 ```
 
 ## Question 5. The number of passengers
@@ -113,11 +96,17 @@ In 2019-01-01 how many trips had 2 and 3 passengers?
 ## Answer 5.
 ```
 ✅ 2: 1282 ; 3: 254
-select 
-    count(1) 
-from green_taxi_data 
-where date(lpep_pickup_datetime) = '2019-01-01' 
-    and passenger_count = [2/3];
+
+SELECT
+	(SELECT COUNT(1)
+		FROM GREEN_TAXI_DATA
+		WHERE DATE(LPEP_PICKUP_DATETIME) = '2019-01-01'
+			AND PASSENGER_COUNT = 2) AS TRIP_WITH_2_PASSENGERS_ON_2019_01_01,
+
+	(SELECT COUNT(1)
+		FROM GREEN_TAXI_DATA
+		WHERE DATE(LPEP_PICKUP_DATETIME) = '2019-01-01'
+			AND PASSENGER_COUNT = 3) AS TRIP_WITH_3_PASSENGERS_ON_2019_01_01;
 ```
 ## Question 6. Largest tip
 
@@ -136,7 +125,7 @@ Note: it's not a typo, it's `tip` , not `trip`
 ```
 ✅ Long Island City/Queens Plaza
 
-WITH BASE AS
+WITH MAX_TIP_AMOUNT_AT_DROPOFF_LOCATION AS
 	(SELECT "DOLocationID" AS LOCATION_ID,
 			MAX(TIP_AMOUNT) AS MAX_TIP_AMOUNT
 		FROM PUBLIC.GREEN_TAXI_DATA
@@ -147,20 +136,8 @@ WITH BASE AS
 		GROUP BY 1
 		ORDER BY 2 DESC)
 SELECT *
-FROM BASE
+FROM MAX_TIP_AMOUNT_AT_DROPOFF_LOCATION
 LEFT JOIN PUBLIC.TAXI_ZONE_LOOKUP_DATA USING (LOCATION_ID)
 ORDER BY 2 DESC
 LIMIT 1;
 ```
-
-## Submitting the solutions
-
-* Form for submitting: [form](https://forms.gle/EjphSkR1b3nsdojv7)
-* You can submit your homework multiple times. In this case, only the last submission will be used. 
-
-Deadline: 26 January (Thursday), 22:00 CET
-
-
-## Solution
-
-We will publish the solution here
